@@ -2,6 +2,8 @@
 
 from qgis.core import QgsProject, QgsVectorLayer, QgsRasterLayer
 from PyQt5.QtWidgets import QPushButton, QTableWidget, QGridLayout, QFrame, QMessageBox
+from pathlib import Path
+import os, urllib3, json
 
 from .TabBase import TabBase
 from pathlib import Path
@@ -50,6 +52,39 @@ class cdrTab(TabBase):
         data_type = 'Continuous'
         category = 'TEST Geophysical'
 
+        '''
+        # mostly copied this metadata from another test push
+        metadata_dict = {'authors': [author_name],
+                         'publication_date': '2024-08-19T15:25:34.155039',
+                         'subcategory': 'subcategory',
+                         'derivative_ops': 'derivative_ops',
+                         'resolution': [3.0, 3.0], # this should be read from the file
+                         'download_url': 'https://s3.amazonaws.com/public.cdr.land/prospectivity/inputs/0159507f9a7a4f7abd751af287a907c0.tif',
+                         'evidence_layer_raster_prefix': 'evidence_layer_raster_prefix', # should this be layer_name?
+                         'data_source_id': 'evidence_layer_raster_prefix_res0_3_res1_3_cat_LayerCategoryGEOPHYSICS',
+                         # it looks like data_source_id is supposed to be constructed from the prefix, resolution, and category
+                         'DOI': 'DOI',
+                         'category': category,
+                         'description': 'description',
+                         'type': data_type,
+                         'format': 'tif',
+                         'reference_url': 'http'} # None is not accepted, empty string is also not accepted for 'reference_url'
+        with open(input_path, 'rb') as f:
+            fread = f.read()
+        cdr_host = "https://api.cdr.land"
+        cdr_version = 'v1'
+        token = os.environ['CDR_API_TOKEN']
+        headers = {"Authorization": f"Bearer {token}"}
+        http = urllib3.PoolManager()
+        push_query = f'prospectivity/datasource'
+        push_url = f'{cdr_host}/{cdr_version}/{push_query}'
+        filename = Path(input_path).name
+        payload = {
+            'metadata': json.dumps(metadata_dict),
+            'input_file': (filename, fread)
+        }
+        resp = http.request("POST", push_url, headers=headers, fields=payload)
+        #'''
 
         # Retrieve inputs
         layer_name = self.wizard.field("layer_name")
