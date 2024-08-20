@@ -1,6 +1,10 @@
-<plugins> 
-  <pyqgis_plugin name="StatMaGIC_CDR" version="2.1.0">
-    <qgis_minimum_version>3.0.0</qgis_minimum_version>
-      <download_url>https://github.com/DARPA-CRITICALMAAS/mtri-cdr-qtool/blob/main/StatMaGIC_CDR.zip</download_url>
-  </pyqgis_plugin>
+<?xml version="1.0"?>
+<plugins>
+    <pyqgis_plugin name="StatMaGIC_CDR" version="0.1">
+        <description>This plugin can push data layers to the USGS CDR</description>
+        <qgis_minimum_version>3.0</qgis_minimum_version>
+        <file_name>StatMaGIC_CDR.zip</file_name>
+        <author_name>MTRI</author_name>
+        <download_url>https://github.com/DARPA-CRITICALMAAS/mtri-cdr-qtool/blob/main/StatMaGIC_CDR.zip</download_url>
+    </pyqgis_plugin>
 </plugins>
