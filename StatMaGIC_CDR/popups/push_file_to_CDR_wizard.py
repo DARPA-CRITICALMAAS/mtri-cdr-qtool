@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWizard, QWizardPage, QLabel, QLineEdit, QGridLayout, QComboBox, QFormLayout
+from PyQt5.QtWidgets import QWizard, QWizardPage, QLabel, QLineEdit, QGridLayout, QComboBox, QFormLayout, QSpinBox
 from qgis.gui import QgsFileWidget, QgsMapLayerComboBox
 from qgis.core import QgsMapLayerProxyModel
 
@@ -93,12 +93,15 @@ class Page2(QWizardPage):
 
         self.setLayout(layout)
 
-        # self.registerField('layer_name*', self.LayerName_LineEdit)
-        # self.registerField('author_name*', self.AuthorName_LineEdit)
-        # self.registerField('ref_url', self.ReferenceURL_LineEdit)
-        # self.registerField('data_type', self.DataType_SpinBox.currentText())
-        # self.registerField('category', self.CategorySpinBox.currentText())
-
+        self.registerField('layer_name*', self.LayerName_LineEdit)
+        self.registerField('author_name*', self.AuthorName_LineEdit)
+        self.registerField('data_type', self.DataType_SpinBox, property='currentText')
+        self.registerField('category', self.Category_SpinBox, property='currentText')
+        self.registerField('subcategory', self.subCategory_LineEdit)
+        self.registerField('ops', self.deriveOps_LineEdit)
+        self.registerField('date', self.publicationDate_LineEdit)
+        self.registerField('ref_url', self.ReferenceURL_LineEdit)
+        self.registerField('doi', self.doi_LineEdit)
 
 
         # self.CommentsText.textChanged.connect(self.commentsTyped)

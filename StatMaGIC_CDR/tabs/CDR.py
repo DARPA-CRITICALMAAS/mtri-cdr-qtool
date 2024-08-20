@@ -4,6 +4,8 @@ from qgis.core import QgsProject, QgsVectorLayer, QgsRasterLayer
 from PyQt5.QtWidgets import QPushButton, QTableWidget, QGridLayout, QFrame, QMessageBox
 from pathlib import Path
 import os, urllib3, json
+from osgeo import gdal
+
 
 from .TabBase import TabBase
 from pathlib import Path
@@ -71,21 +73,33 @@ class cdrTab(TabBase):
         layer_name = self.wizard.field("layer_name")
         author_name = self.wizard.field("author_name")
         ref_url = self.wizard.field("ref_url")
-        input_path = self.wizard.field("input_path")
+        #input_path = self.wizard.field("input_path") # haven't gotten this to work yet
         data_type = self.wizard.field("data_type")
         category = self.wizard.field("category")
-
+        subcategory = self.wizard.field("subcategory")
+        ops = self.wizard.field("ops")
+        date = self.wizard.field("date")
+        doi = self.wizard.field("doi")
 
         # with open(Path(proj_path, 'project_metadata.json'), 'w') as f:
         #     json.dump(meta_dict, f)
 
+        _, xres, _, _, _, yres = gdal.Open(input_path).GetGeoTransform()
+        resolution = [xres, yres]
+        sid = f'{layer_name}_res0_{xres}_res1_{yres}_cat_LayerCategory{category.upper()}'
 
         msgBox = QMessageBox()
         msgBox.setText(f"Layer Name: {layer_name}     \n"
-                       f"Author Name {author_name} \n"
-                       f"Data Type: {data_type} \n"
+                       f"Author Names: {author_name} \n"
+                       f"Publication Date: {date} \n"
                        f"Category: {category} \n"
+                       f"Subcategory: {subcategory} \n"
+                       f"Derivative Ops: {ops}  \n"
                        f"Input Path: {input_path}  \n"
+                       f"Resolution: {resolution}  \n"
+                       f"Data Source ID: {sid}  \n"
+                       f"Data Type: {data_type} \n"
+                       f"DOI: {doi} \n"
                        f"Ref URL: {ref_url}")
         msgBox.exec()
 
@@ -93,15 +107,14 @@ class cdrTab(TabBase):
 
         # UPDATE THIS TO TAKE IN INPUTS
         self.metadata_dict = {'authors': [author_name],
-                         'publication_date': '2024-08-19T15:25:34.155039',
-                         'subcategory': 'subcategory',
-                         'derivative_ops': 'derivative_ops',
-                         'resolution': [3.0, 3.0], # this should be read from the file
+                         'publication_date': date,
+                         'subcategory': subcategory,
+                         'derivative_ops': ops,
+                         'resolution': resolution,
                          'download_url': 'https://s3.amazonaws.com/public.cdr.land/prospectivity/inputs/0159507f9a7a4f7abd751af287a907c0.tif',
-                         'evidence_layer_raster_prefix': 'evidence_layer_raster_prefix', # should this be layer_name?
-                         'data_source_id': 'evidence_layer_raster_prefix_res0_3_res1_3_cat_LayerCategoryGEOPHYSICS',
-                         # it looks like data_source_id is supposed to be constructed from the prefix, resolution, and category
-                         'DOI': 'DOI',
+                         'evidence_layer_raster_prefix': layer_name,
+                         'data_source_id': sid,
+                         'DOI': doi,
                          'category': category,
                          'description': 'description',
                          'type': data_type,
