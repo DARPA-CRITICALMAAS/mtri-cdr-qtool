@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWizard, QWizardPage, QLabel, QLineEdit, QGridLayout, QComboBox
+from PyQt5.QtWidgets import QWizard, QWizardPage, QLabel, QLineEdit, QGridLayout, QComboBox, QFormLayout
 from qgis.gui import QgsFileWidget, QgsMapLayerComboBox
 from qgis.core import QgsMapLayerProxyModel
 
@@ -17,7 +17,7 @@ class PushCDR_Wizard(QWizard):
         self.addPage(Page1(self))
         self.addPage(Page2(self))
 
-        self.button(QWizard.FinishButton).clicked.connect(self.parent.push_to_CDR)
+        self.button(QWizard.FinishButton).clicked.connect(self.parent.assemble_metadata)
 
     def reject(self):
         # we need to call QWizard's reject method to actually close the window
@@ -68,33 +68,35 @@ class Page2(QWizardPage):
         self.setTitle('Fill out the required metadata')
 
         # create some widgets
-        self.LayerNameLineEdit = QLineEdit()
-        self.DataTypeSpinBox = QComboBox()
-        self.DataTypeSpinBox.addItems(['Continuous', 'Binary', 'Categorical'])
-        self.CategorySpinBox = QComboBox()
-        self.CategorySpinBox.addItems(['Geophysics', 'Geology', 'Geochemistry'])
-        self.AuthorNameLineEdit = QLineEdit()
-        self.ReferenceURLLineEdit = QLineEdit()
+        self.LayerName_LineEdit = QLineEdit()
+        self.DataType_SpinBox = QComboBox()
+        self.DataType_SpinBox.addItems(['Continuous', 'Binary', 'Categorical'])
+        self.Category_SpinBox = QComboBox()
+        self.Category_SpinBox.addItems(['Geophysics', 'Geology', 'Geochemistry'])
+        self.subCategory_LineEdit = QLineEdit()
+        self.AuthorName_LineEdit = QLineEdit()
+        self.ReferenceURL_LineEdit = QLineEdit()
+        self.doi_LineEdit = QLineEdit()
+        self.publicationDate_LineEdit = QLineEdit()
+        self.deriveOps_LineEdit = QLineEdit()
 
-        # set the page layout
-        layout = QGridLayout()
-        layout.addWidget(QLabel('Layer Name'), 0, 0)
-        layout.addWidget(self.LayerNameLineEdit, 0, 1)
-        layout.addWidget(QLabel('Data Type'), 1, 0)
-        layout.addWidget(self.DataTypeSpinBox, 1, 1)
-        layout.addWidget(QLabel('Category'), 2, 0)
-        layout.addWidget(self.CategorySpinBox, 2, 1)
-        layout.addWidget(QLabel('Author Name'), 3, 0)
-        layout.addWidget(self.AuthorNameLineEdit, 3, 1)
-        layout.addWidget(QLabel('Reference URL (Optional)'), 4, 0)
-        layout.addWidget(self.ReferenceURLLineEdit, 4, 1)
+        layout = QFormLayout()
+        layout.addRow('Layer Name: ', self.LayerName_LineEdit)
+        layout.addRow('Author(s): ', self.AuthorName_LineEdit)
+        layout.addRow('Data Type: ', self.DataType_SpinBox)
+        layout.addRow('Category: ', self.Category_SpinBox)
+        layout.addRow('Subcategory: ', self.subCategory_LineEdit)
+        layout.addRow('Derivative Ops: ', self.deriveOps_LineEdit)
+        layout.addRow('Publication Date: ', self.publicationDate_LineEdit)
+        layout.addRow('Reference URL: ', self.ReferenceURL_LineEdit)
+        layout.addRow('DOI: ', self.doi_LineEdit)
 
         self.setLayout(layout)
 
-        self.registerField('layer_name*', self.LayerNameLineEdit)
-        self.registerField('author_name*', self.AuthorNameLineEdit)
-        self.registerField('ref_url', self.ReferenceURLLineEdit)
-        # self.registerField('data_type', self.DataTypeSpinBox.currentText())
+        # self.registerField('layer_name*', self.LayerName_LineEdit)
+        # self.registerField('author_name*', self.AuthorName_LineEdit)
+        # self.registerField('ref_url', self.ReferenceURL_LineEdit)
+        # self.registerField('data_type', self.DataType_SpinBox.currentText())
         # self.registerField('category', self.CategorySpinBox.currentText())
 
 
@@ -102,7 +104,7 @@ class Page2(QWizardPage):
         # self.CommentsText.textChanged.connect(self.commentsTyped)
 
         # Delete this when done testing
-        # self.registerField('user_name', self.LayerNameLineEdit)
+        # self.registerField('user_name', self.LayerName_LineEdit)
         # self.registerField('cma_name', self.CMA_NameLineEdit)
         # self.registerField('cma_mineral', self.CMA_MineralLineEdit)
         # self.registerField('comments', self.CommentsText)
