@@ -91,22 +91,6 @@ class cdrTab(TabBase):
         resolution = [xres, yres]
         sid = f'{layer_name}_res0_{xres}_res1_{yres}_cat_LayerCategory{category.upper()}'
 
-        msgBox = QMessageBox()
-        msgBox.setText(f"Layer Name: {layer_name}     \n"
-                       f"Author Names: {author_name} \n"
-                       f"Publication Date: {date} \n"
-                       f"Category: {category} \n"
-                       f"Subcategory: {subcategory} \n"
-                       f"Derivative Ops: {ops}  \n"
-                       f"Input Path: {input_path}  \n"
-                       f"Resolution: {resolution}  \n"
-                       f"Data Source ID: {sid}  \n"
-                       f"Data Type: {data_type} \n"
-                       f"DOI: {doi} \n"
-                       f"Ref URL: {ref_url}")
-        msgBox.exec()
-
-
         #'''
         # UPDATE THIS TO TAKE IN INPUTS
         self.metadata_dict = {'authors': [author_name],
@@ -122,10 +106,28 @@ class cdrTab(TabBase):
                          'description': 'description',
                          'type': data_type,
                          'format': 'tif',
-                         'reference_url': 'http'} # None is not accepted, empty string is also not accepted for 'reference_url'
+                         'reference_url': ref_url}
         #'''
 
+        msgBox = QMessageBox()
+        msgBox.setText(f"Layer Name: {layer_name}     \n"
+                       f"Author Names: {author_name} \n"
+                       f"Publication Date: {date} \n"
+                       f"Category: {category} \n"
+                       f"Subcategory: {subcategory} \n"
+                       f"Derivative Ops: {ops}  \n"
+                       f"Input Path: {input_path}  \n"
+                       f"Resolution: {resolution}  \n"
+                       f"Data Source ID: {sid}  \n"
+                       f"Data Type: {data_type} \n"
+                       f"DOI: {doi} \n"
+                       f"Ref URL: {ref_url}")
+        msgBox.setInformativeText(f"Push {Path(input_path).name} to CDR?")
+        msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
 
+        returnValue = msgBox.exec()
+        if returnValue == QMessageBox.Ok:
+            self.push_to_CDR()
 
 
     def push_to_CDR(self):
@@ -155,4 +157,7 @@ class cdrTab(TabBase):
             'input_file': (filename, fread)
         }
         resp = http.request("POST", push_url, headers=headers, fields=payload)
-
+        resp_status = resp.status
+        QgsMessageLog.logMessage(f'POST request status: {resp_status}')
+        if resp_status == 400:
+            QgsMessageLog.logMessage(json.loads(resp.data)['detail'])

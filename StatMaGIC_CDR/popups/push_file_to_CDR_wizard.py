@@ -70,9 +70,9 @@ class Page2(QWizardPage):
         # create some widgets
         self.LayerName_LineEdit = QLineEdit()
         self.DataType_SpinBox = QComboBox()
-        self.DataType_SpinBox.addItems(['Continuous', 'Binary', 'Categorical'])
+        self.DataType_SpinBox.addItems(['continuous', 'binary', 'categorical'])
         self.Category_SpinBox = QComboBox()
-        self.Category_SpinBox.addItems(['Geophysics', 'Geology', 'Geochemistry'])
+        self.Category_SpinBox.addItems(['geophysics', 'geology', 'geochemistry'])
         self.subCategory_LineEdit = QLineEdit()
         self.AuthorName_LineEdit = QLineEdit()
         self.ReferenceURL_LineEdit = QLineEdit()
