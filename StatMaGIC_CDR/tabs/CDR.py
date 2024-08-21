@@ -79,17 +79,9 @@ class cdrTab(TabBase):
         ops = self.wizard.field("ops")
         date = self.wizard.field("date")
         doi = self.wizard.field("doi")
+        input_path = self.wizard.field('input_path')
+        QgsMessageLog.logMessage(f'input path: {input_path}')
 
-        input_layer = self.wizard.field("input_layer")
-        input_file = self.wizard.field("input_file")
-        QgsMessageLog.logMessage(f'input layer: {input_layer}')
-        QgsMessageLog.logMessage(f'input file: {input_file}')
-        if input_layer:
-            input_path = input_layer.source()
-        elif input_file:
-            input_path = input_file
-        else:
-            pass
 
         # with open(Path(proj_path, 'project_metadata.json'), 'w') as f:
         #     json.dump(meta_dict, f)

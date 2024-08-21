@@ -46,18 +46,18 @@ class Page1(QWizardPage):
         layout.addWidget(label2, 1, 0)
         layout.addWidget(self.fileInput, 1, 1)
 
-        self.registerField("input_layer", self.comboBox, property='currentLayer', changedSignal=self.comboBox.layerChanged)
         self.comboBox.layerChanged.connect(self.layer_changed)
-        self.registerField("input_file", self.fileInput, property='filePath', changedSignal=self.fileInput.fileChanged)
         self.fileInput.fileChanged.connect(self.file_changed)
+        self.registerField('input_path', self.fileInput)
 
         self.setLayout(layout)
 
     def file_changed(self):
-        self.setField('input_file', self.fileInput.filePath())
+        self.setField('input_path', self.fileInput.filePath())
 
     def layer_changed(self):
-        self.setField('input_layer', self.comboBox.currentLayer())
+        selectedLayer = self.comboBox.currentLayer()
+        self.setField('input_path', selectedLayer.source())
 
 
 class Page2(QWizardPage):
