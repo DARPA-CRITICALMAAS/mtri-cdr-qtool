@@ -79,6 +79,7 @@ class Page2(QWizardPage):
         self.doi_LineEdit = QLineEdit()
         self.publicationDate = QDateTimeEdit()
         self.deriveOps_LineEdit = QLineEdit()
+        self.description_LineEdit = QLineEdit()
 
         layout = QFormLayout()
         layout.addRow('Layer Name: ', self.LayerName_LineEdit)
@@ -90,6 +91,7 @@ class Page2(QWizardPage):
         layout.addRow('Publication Date: ', self.publicationDate)
         layout.addRow('Reference URL: ', self.ReferenceURL_LineEdit)
         layout.addRow('DOI: ', self.doi_LineEdit)
+        layout.addRow('Description: ', self.description_LineEdit)
 
         self.setLayout(layout)
 
@@ -102,6 +104,7 @@ class Page2(QWizardPage):
         self.registerField('date', self.publicationDate)
         self.registerField('ref_url', self.ReferenceURL_LineEdit)
         self.registerField('doi', self.doi_LineEdit)
+        self.registerField('description', self.description_LineEdit)
 
 
         # self.CommentsText.textChanged.connect(self.commentsTyped)

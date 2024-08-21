@@ -80,8 +80,9 @@ class cdrTab(TabBase):
         ops = self.wizard.field("ops")
         date = self.wizard.field("date").toString(Qt.ISODate)
         doi = self.wizard.field("doi")
+        description = self.wizard.field("description")
         input_path = self.wizard.field('input_path')
-        QgsMessageLog.logMessage(f'input path: {input_path}')
+        #QgsMessageLog.logMessage(f'input path: {input_path}')
 
 
         # with open(Path(proj_path, 'project_metadata.json'), 'w') as f:
@@ -93,7 +94,7 @@ class cdrTab(TabBase):
 
         #'''
         # UPDATE THIS TO TAKE IN INPUTS
-        self.metadata_dict = {'authors': [author_name],
+        self.metadata_dict = {'authors': author_name.split(','),
                          'publication_date': date,
                          'subcategory': subcategory,
                          'derivative_ops': ops,
@@ -103,7 +104,7 @@ class cdrTab(TabBase):
                          'data_source_id': sid,
                          'DOI': doi,
                          'category': category,
-                         'description': 'description',
+                         'description': description,
                          'type': data_type,
                          'format': 'tif',
                          'reference_url': ref_url}
@@ -127,7 +128,14 @@ class cdrTab(TabBase):
 
         returnValue = msgBox.exec()
         if returnValue == QMessageBox.Ok:
-            self.push_to_CDR()
+            try:
+                token = os.environ['CDR_API_TOKEN']
+                self.push_to_CDR()
+            except KeyError:
+                msgBox2 = QMessageBox()
+                msgBox2.setText('CDR Token not set. Please enter your CDR Token.')
+                msgBox2.buttonClicked.connect(self.launch_CDR_popup)
+                msgBox2.exec()
 
 
     def push_to_CDR(self):
@@ -161,3 +169,5 @@ class cdrTab(TabBase):
         QgsMessageLog.logMessage(f'POST request status: {resp_status}')
         if resp_status == 400:
             QgsMessageLog.logMessage(json.loads(resp.data)['detail'])
+        elif resp_status == 401:
+            QgsMessageLog.logMessage('Make sure you have entered your CDR Token correctly')
