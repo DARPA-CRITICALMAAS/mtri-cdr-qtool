@@ -1,6 +1,6 @@
 
 
-from qgis.core import QgsProject, QgsVectorLayer, QgsRasterLayer
+from qgis.core import QgsProject, QgsVectorLayer, QgsRasterLayer, QgsMessageLog
 from PyQt5.QtWidgets import QPushButton, QTableWidget, QGridLayout, QFrame, QMessageBox
 from pathlib import Path
 import os, urllib3, json
@@ -73,13 +73,23 @@ class cdrTab(TabBase):
         layer_name = self.wizard.field("layer_name")
         author_name = self.wizard.field("author_name")
         ref_url = self.wizard.field("ref_url")
-        #input_path = self.wizard.field("input_path") # haven't gotten this to work yet
         data_type = self.wizard.field("data_type")
         category = self.wizard.field("category")
         subcategory = self.wizard.field("subcategory")
         ops = self.wizard.field("ops")
         date = self.wizard.field("date")
         doi = self.wizard.field("doi")
+
+        input_layer = self.wizard.field("input_layer")
+        input_file = self.wizard.field("input_file")
+        QgsMessageLog.logMessage(f'input layer: {input_layer}')
+        QgsMessageLog.logMessage(f'input file: {input_file}')
+        if input_layer:
+            input_path = input_layer.source()
+        elif input_file:
+            input_path = input_file
+        else:
+            pass
 
         # with open(Path(proj_path, 'project_metadata.json'), 'w') as f:
         #     json.dump(meta_dict, f)
@@ -104,7 +114,7 @@ class cdrTab(TabBase):
         msgBox.exec()
 
 
-
+        #'''
         # UPDATE THIS TO TAKE IN INPUTS
         self.metadata_dict = {'authors': [author_name],
                          'publication_date': date,
@@ -120,7 +130,7 @@ class cdrTab(TabBase):
                          'type': data_type,
                          'format': 'tif',
                          'reference_url': 'http'} # None is not accepted, empty string is also not accepted for 'reference_url'
-
+        #'''
 
 
 

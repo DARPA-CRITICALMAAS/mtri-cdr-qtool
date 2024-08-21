@@ -46,18 +46,18 @@ class Page1(QWizardPage):
         layout.addWidget(label2, 1, 0)
         layout.addWidget(self.fileInput, 1, 1)
 
-        selectedFile = self.comboBox.currentLayer()
-        selectedPath = self.fileInput.filePath()
-
-        if selectedFile:
-            self.registerField("input_path", selectedFile.source())
-        elif selectedPath:
-            self.registerField("input_path", selectedPath)
-        else:
-            pass
-
+        self.registerField("input_layer", self.comboBox, property='currentLayer', changedSignal=self.comboBox.layerChanged)
+        self.comboBox.layerChanged.connect(self.layer_changed)
+        self.registerField("input_file", self.fileInput, property='filePath', changedSignal=self.fileInput.fileChanged)
+        self.fileInput.fileChanged.connect(self.file_changed)
 
         self.setLayout(layout)
+
+    def file_changed(self):
+        self.setField('input_file', self.fileInput.filePath())
+
+    def layer_changed(self):
+        self.setField('input_layer', self.comboBox.currentLayer())
 
 
 class Page2(QWizardPage):
@@ -93,8 +93,8 @@ class Page2(QWizardPage):
 
         self.setLayout(layout)
 
-        self.registerField('layer_name*', self.LayerName_LineEdit)
-        self.registerField('author_name*', self.AuthorName_LineEdit)
+        self.registerField('layer_name', self.LayerName_LineEdit)
+        self.registerField('author_name', self.AuthorName_LineEdit)
         self.registerField('data_type', self.DataType_SpinBox, property='currentText')
         self.registerField('category', self.Category_SpinBox, property='currentText')
         self.registerField('subcategory', self.subCategory_LineEdit)
