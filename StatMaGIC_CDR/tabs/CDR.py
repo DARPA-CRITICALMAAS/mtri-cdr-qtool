@@ -2,6 +2,7 @@
 
 from qgis.core import QgsProject, QgsVectorLayer, QgsRasterLayer, QgsMessageLog
 from PyQt5.QtWidgets import QPushButton, QTableWidget, QGridLayout, QFrame, QMessageBox
+from PyQt5.QtCore import Qt
 from pathlib import Path
 import os, urllib3, json
 from osgeo import gdal
@@ -77,7 +78,7 @@ class cdrTab(TabBase):
         category = self.wizard.field("category")
         subcategory = self.wizard.field("subcategory")
         ops = self.wizard.field("ops")
-        date = self.wizard.field("date")
+        date = self.wizard.field("date").toString(Qt.ISODate)
         doi = self.wizard.field("doi")
         input_path = self.wizard.field('input_path')
         QgsMessageLog.logMessage(f'input path: {input_path}')

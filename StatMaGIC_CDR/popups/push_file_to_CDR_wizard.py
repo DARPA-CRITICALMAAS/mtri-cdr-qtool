@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWizard, QWizardPage, QLabel, QLineEdit, QGridLayout, QComboBox, QFormLayout, QSpinBox
+from PyQt5.QtWidgets import QWizard, QWizardPage, QLabel, QLineEdit, QGridLayout, QComboBox, QFormLayout, QSpinBox, QDateTimeEdit
 from qgis.gui import QgsFileWidget, QgsMapLayerComboBox
 from qgis.core import QgsMapLayerProxyModel
 
@@ -77,7 +77,7 @@ class Page2(QWizardPage):
         self.AuthorName_LineEdit = QLineEdit()
         self.ReferenceURL_LineEdit = QLineEdit()
         self.doi_LineEdit = QLineEdit()
-        self.publicationDate_LineEdit = QLineEdit()
+        self.publicationDate = QDateTimeEdit()
         self.deriveOps_LineEdit = QLineEdit()
 
         layout = QFormLayout()
@@ -87,7 +87,7 @@ class Page2(QWizardPage):
         layout.addRow('Category: ', self.Category_SpinBox)
         layout.addRow('Subcategory: ', self.subCategory_LineEdit)
         layout.addRow('Derivative Ops: ', self.deriveOps_LineEdit)
-        layout.addRow('Publication Date: ', self.publicationDate_LineEdit)
+        layout.addRow('Publication Date: ', self.publicationDate)
         layout.addRow('Reference URL: ', self.ReferenceURL_LineEdit)
         layout.addRow('DOI: ', self.doi_LineEdit)
 
@@ -99,7 +99,7 @@ class Page2(QWizardPage):
         self.registerField('category', self.Category_SpinBox, property='currentText')
         self.registerField('subcategory', self.subCategory_LineEdit)
         self.registerField('ops', self.deriveOps_LineEdit)
-        self.registerField('date', self.publicationDate_LineEdit)
+        self.registerField('date', self.publicationDate)
         self.registerField('ref_url', self.ReferenceURL_LineEdit)
         self.registerField('doi', self.doi_LineEdit)
 
