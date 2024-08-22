@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWizard, QWizardPage, QLabel, QLineEdit, QGridLayout, QComboBox, QFormLayout, QSpinBox, QDateTimeEdit
 from qgis.gui import QgsFileWidget, QgsMapLayerComboBox
-from qgis.core import QgsMapLayerProxyModel
+from qgis.core import QgsMapLayerProxyModel, QgsMessageLog
 
 class PushCDR_Wizard(QWizard):
 
@@ -54,10 +54,16 @@ class Page1(QWizardPage):
 
     def file_changed(self):
         self.setField('input_path', self.fileInput.filePath())
+        self.completeChanged.emit()
 
     def layer_changed(self):
         selectedLayer = self.comboBox.currentLayer()
         self.setField('input_path', selectedLayer.source())
+        self.completeChanged.emit()
+
+    def isComplete(self):
+        input_path_set = self.field('input_path') is not None
+        return input_path_set and super().isComplete()
 
 
 class Page2(QWizardPage):
